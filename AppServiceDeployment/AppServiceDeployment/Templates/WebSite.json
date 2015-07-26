@@ -1,0 +1,52 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+    "parameters": {
+    "siteName": {
+      "type": "string"
+    },
+    "planName": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "workerSize": "0",
+    "sku": "Free",
+    "location": "East US"
+  },
+  "resources": [
+    {
+      "apiVersion": "2014-06-01",
+      "name": "[parameters('planName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[variables('location')]",
+      "tags": {
+        "displayName": "HostingPlan"
+      },
+      "properties": {
+        "name": "[parameters('planName')]",
+        "sku": "[variables('sku')]",
+        "workerSize": "[variables('workerSize')]",
+        "numberOfWorkers": 1
+      }
+    },
+    {
+      "apiVersion": "2014-06-01",
+      "name": "[parameters('siteName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[variables('location')]",
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('planName'))]": "Resource",
+        "displayName": "Website"
+
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Web/serverfarms/', parameters('planName'))]"
+      ],
+      "properties": {
+        "name": "[parameters('siteName')]",
+        "serverFarm": "[parameters('planName')]"
+      }
+    }
+  ]
+}
