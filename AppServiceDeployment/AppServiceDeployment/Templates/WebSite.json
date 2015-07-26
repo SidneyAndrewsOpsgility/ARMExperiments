@@ -1,10 +1,7 @@
 ﻿{
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-    "parameters": {
-    "siteName": {
-      "type": "string"
-    },
+  "parameters": {
     "planName": {
       "type": "string"
     }
@@ -32,7 +29,6 @@
     },
     {
       "apiVersion": "2014-06-01",
-      "name": "[parameters('siteName')]",
       "type": "Microsoft.Web/sites",
       "location": "[variables('location')]",
       "tags": {
@@ -44,7 +40,6 @@
         "[concat('Microsoft.Web/serverfarms/', parameters('planName'))]"
       ],
       "properties": {
-        "name": "[parameters('siteName')]",
         "serverFarm": "[parameters('planName')]"
       }
     }
